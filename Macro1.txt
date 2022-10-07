@@ -1,0 +1,707 @@
+Sub FinancialOfficeCode()
+'Created 30/Sep/22 by VW
+
+    Dim Names As String
+    'Path
+    Dim Path As String
+    Dim Pathcount As String
+    
+  
+    'Library: Tools, References and place a check mark beside Microsoft Scripting Run-time.
+    Dim FileSys As FileSystemObject
+    Dim objFile As File
+    
+    Dim memoryNum As Integer
+
+    'Data
+    Dim individualOffering_GF As Double
+    Dim congregationOffering_GF As Double
+    Dim individualOffering_TCGBC As Doublez
+    Dim flowers As Double
+    Dim thanksgiving As Double
+    Dim SSoffering As Double
+    Dim interestEarned As Double
+    Dim advertisement As Double
+    Dim financeRelated As Double
+    Dim auditFees As Double
+    Dim FandE As Double
+    Dim computerExpense As Double
+    Dim SandP As Double
+    Dim TandI As Double
+    Dim TandT As Double
+    Dim movingExpenses As Double
+    Dim CM As Double
+    Dim EM As Double
+    Dim MM As Double
+    Dim TCGBC As Double
+    Dim GM As Double
+    Dim leadershipTandD As Double
+    Dim childrenMinistry As Double
+    Dim LandL As Double
+    Dim music As Double
+    Dim buildingMaintenance As Double
+    Dim flowerExpense As Double
+    Dim heatLightWater As Double
+    Dim insuranceAndSecurities As Double
+    Dim miscAndSupplies As Double
+    Dim canaanOffering As Double
+    Dim canaanRegistration As Double
+    Dim emmanuelOffering As Double
+    Dim missionFund As Double
+    Dim missionInterest As Double
+    Dim renovationFund As Double
+    Dim churchExpansionFund As Double
+    Dim churchExpansionInterest As Double
+    Dim canaanExpense As Double
+    Dim womenExpense As Double
+    Dim missionExpense As Double
+    Dim renovationExpense As Double
+    Dim grossSalaries As Double
+    Dim CPPExpense As Double
+    Dim EIExpense As Double
+    Dim pensionExpense As Double
+    Dim lifeInsurance As Double
+    Dim healthcareAndDrugs As Double
+    Dim dental As Double
+    Dim accidentDeath As Double
+    Dim LTD As Double
+    Dim EAP As Double
+    Dim retirementBenefitSurcharge As Double
+    Dim tempCasualSalary As Double
+    Dim payRollExpense As Double
+    'Error
+    Dim flag As Integer
+    '-----------------Declare--------------------
+    flag = 0
+    Path = Application.ActiveWorkbook.Path
+    Names = Application.ActiveWorkbook.Name
+
+
+
+    '---------------Declare Filesys----------------
+    Set FileSys = New FileSystemObject
+    '-------------------IncomeMMMYYYYFinal.xls---------------------------------
+    Set currentFolder = FileSys.GetFolder(Path)
+    dteFile = DateSerial(1900, 1, 1)
+    For Each objFile In currentFolder.Files
+        If objFile.DateLastModified > dteFile And Right(objFile.Name, 3) = "xls" And Not LCase(Left(objFile.Name, 3)) = "obs" And (InStr(objFile.Name, "income") > 0 Or InStr(objFile.Name, "Final") > 0) Then
+            income = objFile.Name
+        End If
+    Next objFile
+    
+    If (income = "") Then
+        flag = 1
+        MsgBox "Can't Find Income.xls File"
+        GoTo quitProgram
+    End If
+    '-------------------Month_YYYY_Financial_Summary.xls---------------------------------
+    For Each objFile In currentFolder.Files
+        If objFile.DateLastModified > dteFile And Right(objFile.Name, 3) = "xls" And Not LCase(Left(objFile.Name, 3)) = "obs" And (InStr(objFile.Name, "Financial_Summary") > 0) Then
+            Summary = objFile.Name
+        End If
+    Next objFile
+    
+    If (Summary = "") Then
+        flag = 1
+        MsgBox "Can't Find Financial_Summary.xls File"
+        GoTo quitProgram
+    End If
+    '---------------Find date information (MMMYYYY)--------------------------
+    x = InStrRev(income, "Final") - 1
+    y = Left(income, x)
+    MemName = Right(y, 7)
+
+    currentMonth = Left(MemName, 3)
+    currentYear = Right(MemName, 2)
+    
+    targetDateNameSummary = currentMonth & "'" & currentYear
+    
+    '---------------Income File.xls--------------------------
+    Workbooks.Open Filename:=Path & "\" & income
+    
+    With ActiveSheet
+        Set aCell = .Cells.Find("Individual Offering - General Fund")
+            If Not aCell Is Nothing Then
+                individualOffering_GF = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Individual Offering - General Fund not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Congregation Offering -General Fund")
+            If Not aCell Is Nothing Then
+                congregationOffering_GF = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Congregation Offering -General Fund not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Individual General Offering - TCGBC")
+            If Not aCell Is Nothing Then
+                individualOffering_TCGBC = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Individual General Offering - TCGBC not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Flowers")
+            If Not aCell Is Nothing Then
+                flowers = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Flowers not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Thanksgiving")
+            If Not aCell Is Nothing Then
+                thanksgiving = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Thanksgiving not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Sunday School Offering")
+            If Not aCell Is Nothing Then
+                SSoffering = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Sunday School Offering not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Interest Earned")
+            If Not aCell Is Nothing Then
+                interestEarned = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Interest Earned not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Advertisement")
+            If Not aCell Is Nothing Then
+                advertisement = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Advertisement not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Finance Related")
+            If Not aCell Is Nothing Then
+                financeRelated = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Finance Related not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Audit Fees")
+            If Not aCell Is Nothing Then
+                auditFees = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Audit Fees not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Furniture & Equipment")
+            If Not aCell Is Nothing Then
+                FandE = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Furniture & Equipment not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Computer Expense")
+            If Not aCell Is Nothing Then
+                computerExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Computer Expense not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Stationery & Postage")
+            If Not aCell Is Nothing Then
+                SandP = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Stationery & Postage not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Telephone & Internet")
+            If Not aCell Is Nothing Then
+                TandI = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Telephone & Internet not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Transportation & Travel")
+            If Not aCell Is Nothing Then
+                TandT = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Transportation & Travel not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Telephone & Internet")
+            If Not aCell Is Nothing Then
+                TandI = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Telephone & Internet not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Moving Expenses")
+            If Not aCell Is Nothing Then
+                movingExpenses = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Moving Expenses"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Cantonese Ministry")
+            If Not aCell Is Nothing Then
+                CM = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Cantonese Ministry not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("English Ministry")
+            If Not aCell Is Nothing Then
+                EM = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "English Ministry not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Mandarin Ministry")
+            If Not aCell Is Nothing Then
+                MM = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Mandarin Ministry not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("TCGBC Ministry")
+            If Not aCell Is Nothing Then
+                TCGBC = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "TCGBC Ministry not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("General Ministry")
+            If Not aCell Is Nothing Then
+                GM = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "General Ministry not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("TCGBC Ministry")
+            If Not aCell Is Nothing Then
+                TCGBC = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "TCGBC Ministry not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Leadership, Training & Development")
+            If Not aCell Is Nothing Then
+                leadershipTandD = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Leadership, Training & Development not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Children")
+            If Not aCell Is Nothing Then
+                childrenMinistry = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Children not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Library & Literature")
+            If Not aCell Is Nothing Then
+                LandL = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Library & Literature not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Music")
+            If Not aCell Is Nothing Then
+                music = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Music not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Building Maintenance")
+            If Not aCell Is Nothing Then
+                buildingMaintenance = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Building Maintenance not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Flower Expenses")
+            If Not aCell Is Nothing Then
+                flowerExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Flower Expenses not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Heat, Light & Water")
+            If Not aCell Is Nothing Then
+                heatLightWater = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Heat, Light & Water not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Insurance & Securities")
+            If Not aCell Is Nothing Then
+                insuranceAndSecurities = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Insurance & Securities not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Misc. & Supplies")
+            If Not aCell Is Nothing Then
+                miscAndSupplies = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Misc. & Supplies not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Canaan Fellow. Retreat - Offering")
+            If Not aCell Is Nothing Then
+                canaanOffering = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Canaan Fellow. Retreat - Offering not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Canaan Fellow. Retreat Registration")
+            If Not aCell Is Nothing Then
+                canaanRegistration = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Canaan Fellow. Retreat Registration not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Emmanuel Fellow. Retreat - Offering")
+            If Not aCell Is Nothing Then
+                emmanuelOffering = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Emmanuel Fellow. Retreat - Offering not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Mission Fund - Individual Offering")
+            If Not aCell Is Nothing Then
+                missionFund = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Mission Fund - Individual Offering not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Mission Fund - Interest Earned")
+            If Not aCell Is Nothing Then
+                missionInterest = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Mission Fund - Interest Earned not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Renovation Fund")
+            If Not aCell Is Nothing Then
+                renovationFund = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Renovation Fund Offering not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Church Expansion Fund - Offering")
+            If Not aCell Is Nothing Then
+                churchExpansionFund = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Church Expansion Fund - Offering not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Church Expansion - Interest Earned")
+            If Not aCell Is Nothing Then
+                churchExpansionInterest = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Church Expansion - Interest Earned not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Canaan Fellowship Retreat Fund")
+            If Not aCell Is Nothing Then
+                canaanExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Canaan Fellowship Retreat Fund not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Women's Retreat Fund Expenditure")
+            If Not aCell Is Nothing Then
+                womenExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Women's Retreat Fund Expenditure not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Mission Fund Disbursements")
+            If Not aCell Is Nothing Then
+                missionExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Mission Fund Disbursements not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Renovation Fund Expenditure")
+            If Not aCell Is Nothing Then
+                renovationExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Renovation Fund Expenditure not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Gross Salaries")
+            If Not aCell Is Nothing Then
+                grossSalaries = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Gross Salaries not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("CPP Expense")
+            If Not aCell Is Nothing Then
+                CPPExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "CPP Expense not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("EI Expense")
+            If Not aCell Is Nothing Then
+                EIExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "EI Expense not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Pension Expense")
+            If Not aCell Is Nothing Then
+                pensionExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Pension Expense not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Life Insurance")
+            If Not aCell Is Nothing Then
+                lifeInsurance = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Life Insurance not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Healthcare & Drugs")
+            If Not aCell Is Nothing Then
+                healthcareAndDrugs = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Healthcare & Drugs not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Dental")
+            If Not aCell Is Nothing Then
+                dental = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Dental not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Accidental Death & Disbursement")
+            If Not aCell Is Nothing Then
+                accidentDeath = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Accidental Death & Disbursement not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Long Term Disability")
+            If Not aCell Is Nothing Then
+                LTD = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Long Term Disability not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Long Term Disability")
+            If Not aCell Is Nothing Then
+                LTD = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Long Term Disability not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Employee Assistance Program")
+            If Not aCell Is Nothing Then
+                EAP = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Employee Assistance Program not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Retirement Benefit Surcharge")
+            If Not aCell Is Nothing Then
+                retirementBenefitSurcharge = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Retirement Benefit Surcharge not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Temp/Casual Salary")
+            If Not aCell Is Nothing Then
+                tempCasualSalary = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Temp/Casual Salary not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Temp/Casual Salary")
+            If Not aCell Is Nothing Then
+                tempCasualSalary = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Temp/Casual Salary not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+        Set aCell = .Cells.Find("Payroll Expenses")
+            If Not aCell Is Nothing Then
+                payRollExpense = aCell.Offset(0, 1).Value
+            Else
+                MsgBox "Payroll Expenses not found"
+                flag = 1
+                GoTo quitProgram
+            End If
+    End With
+    
+    Debug.Print TCGBC
+    '---------------Summary File.xls--------------------------
+    Workbooks.Open Filename:=Path & "\" & Summary
+
+    Sheets(1).Activate
+    
+    If (Sheets(Sheets.Count - 1).Name = "Income Statement_M") Then
+        Sheets("Income Statement_M").Activate
+    Else
+        Sheets("Income Statement").Copy After:=Sheets(Sheets.Count)
+        ActiveSheet.Name = "Income Statement_M"
+    End If
+    
+    
+    With ActiveSheet
+        Set aCell = .Cells.Find(What:=targetDateNameSummary, LookIn:=xlValues, _
+                    Lookat:=xlPart, SearchOrder:=xlByColumns, SearchDirection:=xlNext, _
+                    MatchCase:=False, SearchFormat:=False)
+            If Not aCell Is Nothing Then
+                'MsgBox "Found"
+                aCell.Select
+            Else
+                MsgBox "Did you create " & targetDateNameSummary & " on Row8?"
+                flag = 1
+                GoTo quitProgram
+            End If
+    End With
+    
+    '----------------Pasting Result---------------------------
+
+     ActiveCell.Offset(2, 0).Value = individualOffering_GF
+     ActiveCell.Offset(3, 0).Value = congregationOffering_GF
+     ActiveCell.Offset(4, 0).Value = individualOffering_TCGBC
+     ActiveCell.Offset(5, 0).Value = flowers
+     ActiveCell.Offset(6, 0).Value = thanksgiving
+     ActiveCell.Offset(7, 0).Value = SSoffering
+     
+     ActiveCell.Offset(9, 0).Value = interestEarned
+     
+     ActiveCell.Offset(16, 0).Value = advertisement
+     ActiveCell.Offset(17, 0).Value = (financeRelated + auditFees)
+
+     ActiveCell.Offset(19, 0).Value = FandE
+     ActiveCell.Offset(20, 0).Value = computerExpense
+     ActiveCell.Offset(21, 0).Value = SandP
+     ActiveCell.Offset(22, 0).Value = TandI
+     ActiveCell.Offset(23, 0).Value = TandT
+     ActiveCell.Offset(24, 0).Value = movingExpenses
+     
+     ActiveCell.Offset(26, 0).Value = CM
+     ActiveCell.Offset(27, 0).Value = EM
+     ActiveCell.Offset(28, 0).Value = MM
+     ActiveCell.Offset(29, 0).Value = TCGBC
+     ActiveCell.Offset(30, 0).Value = GM
+     
+     ActiveCell.Offset(32, 0).Value = leadershipTandD
+     ActiveCell.Offset(33, 0).Value = childrenMinistry
+     ActiveCell.Offset(34, 0).Value = LandL
+     ActiveCell.Offset(35, 0).Value = music
+     
+     ActiveCell.Offset(37, 0).Value = buildingMaintenance
+     ActiveCell.Offset(38, 0).Value = flowerExpense
+     ActiveCell.Offset(39, 0).Value = heatLightWater
+     ActiveCell.Offset(40, 0).Value = insuranceAndSecurities
+     ActiveCell.Offset(41, 0).Value = miscAndSupplies
+
+     ActiveCell.Offset(50, 0).Value = canaanOffering
+     ActiveCell.Offset(51, 0).Value = canaanRegistration
+     ActiveCell.Offset(52, 0).Value = emmanuelOffering
+     
+     ActiveCell.Offset(56, 0).Value = missionFund
+     ActiveCell.Offset(57, 0).Value = missionInterest
+     
+     ActiveCell.Offset(59, 0).Value = renovationFund
+    
+     ActiveCell.Offset(61, 0).Value = churchExpansionFund
+     ActiveCell.Offset(62, 0).Value = churchExpansionInterest
+
+
+     ActiveCell.Offset(70, 0).Value = canaanExpense
+     
+     ActiveCell.Offset(72, 0).Value = womenExpense
+     
+     ActiveCell.Offset(75, 0).Value = missionExpense
+     ActiveCell.Offset(76, 0).Value = renovationExpense
+     
+     ActiveCell.Offset(87, 0).Value = grossSalaries
+     ActiveCell.Offset(88, 0).Value = CPPExpense
+     ActiveCell.Offset(89, 0).Value = EIExpense
+     ActiveCell.Offset(90, 0).Value = pensionExpense
+     ActiveCell.Offset(91, 0).Value = lifeInsurance
+     ActiveCell.Offset(92, 0).Value = healthcareAndDrugs
+     ActiveCell.Offset(93, 0).Value = dental
+     ActiveCell.Offset(94, 0).Value = accidentDeath
+     ActiveCell.Offset(95, 0).Value = LTD
+     ActiveCell.Offset(96, 0).Value = EAP
+     ActiveCell.Offset(97, 0).Value = retirementBenefitSurcharge
+     ActiveCell.Offset(98, 0).Value = tempCasualSalary
+     ActiveCell.Offset(99, 0).Value = payRollExpense
+
+'    memoryNum = ActiveCell.Row
+'
+'     Debug.Print memoryNum
+
+quitProgram:
+    If (flag = 1) Then
+        MsgBox "Exit Program"
+    End If
+    
+    
+End Sub
