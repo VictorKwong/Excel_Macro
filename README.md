@@ -16,3 +16,8 @@ Design Documents - TestMacro.docx
 - [x] Create a Cancel Button
 - [ ] Create a Confirm Button
 
+Update totalIncome, totalExpense, totalOtherIncome and totalOtherExpense
+General Fund Revenue - H20
+General Fund Expense - H53
+Other Revenue Total - H73
+Mission Disbursement Total - H88
