@@ -21,3 +21,8 @@ General Fund Revenue - H20
 General Fund Expense - H53
 Other Revenue Total - H73
 Mission Disbursement Total - H88
+
+## 07-Dec-24
+
+- Update English Ministry Fund template
+- Pension Calculation - Pastoral + Admin
